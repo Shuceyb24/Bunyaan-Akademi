@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bunyaan Akademi – Intranet</title>
+  <style>
+    :root {
+      --grøn: #1a6b3a;
+      --grøn-lys: #e8f5ee;
+      --grøn-mid: #2d8653;
+      --guld: #c9a227;
+      --guld-lys: #fdf6e3;
+      --rød: #c0392b;
+      --rød-lys: #fdecea;
+      --grå: #f4f6f8;
+      --kant: #dde3ea;
+      --tekst: #1a1a2e;
+      --tekst-lys: #5a6475;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f0f2f5;
+      color: var(--tekst);
+      min-height: 100vh;
+    }
+
+    /* ── TOP BAR ── */
+    header {
+      background: var(--grøn);
+      color: white;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: .3px;
+    }
+    header .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--guld);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+    header .dato { font-size: .85rem; opacity: .85; }
+
+    /* ── NAV ── */
+    nav {
+      background: white;
+      border-bottom: 1px solid var(--kant);
+      display: flex;
+      gap: 4px;
+      padding: 0 20px;
+      overflow-x: auto;
+    }
+    nav button {
+      padding: 14px 18px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: .9rem;
+      color: var(--tekst-lys);
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+      transition: color .15s, border-color .15s;
+    }
+    nav button.aktiv {
+      color: var(--grøn);
+      border-bottom-color: var(--grøn);
+    }
+    nav button:hover:not(.aktiv) { color: var(--tekst); }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 1100px;
+      margin: 28px auto;
+      padding: 0 16px;
+    }
+
+    .side { display: none; }
+    .side.aktiv { display: block; }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--grøn);
+    }
+
+    /* ── KORT ── */
+    .kort {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--kant);
+      padding: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+
+    /* ── DASHBOARD ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-kort {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--kant);
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-kort .tal {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--grøn);
+    }
+    .stat-kort .label {
+      font-size: .82rem;
+      color: var(--tekst-lys);
+      margin-top: 4px;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media(max-width:640px) { .dashboard-grid { grid-template-columns: 1fr; } }
+
+    /* ── FORMULAR ── */
+    .form-gruppe { margin-bottom: 16px; }
+    .form-gruppe label {
+      display: block;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--tekst-lys);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .form-gruppe input,
+    .form-gruppe select,
+    .form-gruppe textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--kant);
+      border-radius: 8px;
+      font-size: .95rem;
+      background: var(--grå);
+      color: var(--tekst);
+      transition: border-color .15s;
+    }
+    .form-gruppe input:focus,
+    .form-gruppe select:focus,
+    .form-gruppe textarea:focus {
+      outline: none;
+      border-color: var(--grøn);
+      background: white;
+    }
+
+    /* ── KNAPPER ── */
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: .9rem;
+      font-weight: 600;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn:hover { opacity: .88; }
+    .btn:active { transform: scale(.97); }
+    .btn-grøn { background: var(--grøn); color: white; }
+    .btn-guld { background: var(--guld); color: white; }
+    .btn-rød { background: var(--rød); color: white; }
+    .btn-outline {
+      background: white;
+      color: var(--grøn);
+      border: 1.5px solid var(--grøn);
+    }
+    .btn-sm { padding: 6px 12px; font-size: .8rem; }
+
+    /* ── TABEL ── */
+    .tabel-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .9rem;
+    }
+    th {
+      background: var(--grøn);
+      color: white;
+      padding: 11px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    th:first-child { border-radius: 8px 0 0 0; }
+    th:last-child { border-radius: 0 8px 0 0; }
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--kant);
+      vertical-align: middle;
+    }
+    tr:nth-child(even) td { background: var(--grå); }
+    tr:hover td { background: var(--grøn-lys); }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 700;
+    }
+    .badge-grøn { background: var(--grøn-lys); color: var(--grøn); }
+    .badge-rød { background: var(--rød-lys); color: var(--rød); }
+    .badge-guld { background: var(--guld-lys); color: #8a6d00; }
+
+    /* ── FRAVÆRSREGISTRERING ── */
+    .elev-liste {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .elev-kort {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border: 1.5px solid var(--kant);
+      border-radius: 10px;
+      background: var(--grå);
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .elev-kort.fraværende {
+      border-color: var(--rød);
+      background: var(--rød-lys);
+    }
+    .elev-kort.til-stede {
+      border-color: var(--grøn);
+      background: var(--grøn-lys);
+    }
+    .elev-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--grøn);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: .9rem;
+      flex-shrink: 0;
+    }
+    .elev-navn { font-weight: 600; font-size: .88rem; }
+    .elev-status { font-size: .75rem; color: var(--tekst-lys); }
+
+    /* ── MODUL SKEMA ── */
+    .skema-grid {
+      display: grid;
+      grid-template-columns: 80px repeat(5,1fr);
+      gap: 4px;
+      margin-top: 16px;
+    }
+    .skema-celle {
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: .82rem;
+      min-height: 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .skema-header {
+      background: var(--grøn);
+      color: white;
+      font-weight: 700;
+      text-align: center;
+      min-height: 40px;
+    }
+    .skema-tid {
+      background: var(--grå);
+      color: var(--tekst-lys);
+      font-weight: 600;
+      font-size: .75rem;
+      text-align: center;
+    }
+    .skema-modul {
+      background: white;
+      border: 1px solid var(--kant);
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .skema-modul:hover { background: var(--grøn-lys); }
+    .skema-modul.har-modul {
+      background: var(--grøn-lys);
+      border-color: var(--grøn);
+    }
+    .skema-modul .fag { font-weight: 700; color: var(--grøn); font-size: .83rem; }
+    .skema-modul .lærer { color: var(--tekst-lys); font-size: .73rem; }
+    .skema-tom { background: var(--grå); border-radius: 8px; }
+
+    /* ── MEDDELELSE ── */
+    .toast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: var(--grøn);
+      color: white;
+      padding: 14px 22px;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.2);
+      font-weight: 600;
+      font-size: .9rem;
+      display: none;
+      z-index: 999;
+      animation: slideIn .3s ease;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to   { transform: translateY(0);   opacity: 1; }
+    }
+
+    /* ── SEKTION TITEL ── */
+    .sektion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* ── WHATSAPP ── */
+    .wa-knap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #25d366;
+      color: white;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: .8rem;
+      font-weight: 600;
+    }
+
+    /* ── MODAL ── */
+    .overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .overlay.vis { display: flex; }
+    .modal {
+      background: white;
+      border-radius: 14px;
+      padding: 28px;
+      width: 95%;
+      max-width: 520px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.2);
+    }
+    .modal h3 { font-size: 1.1rem; margin-bottom: 18px; color: var(--grøn); }
+    .modal-knapper { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+    /* ── FRAVÆR OVERSIGT ── */
+    .fravær-bar-wrap { margin-bottom: 10px; }
+    .fravær-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: .84rem;
+      margin-bottom: 4px;
+    }
+    .fravær-bar-bg {
+      height: 8px;
+      background: var(--kant);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .fravær-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: var(--grøn);
+      transition: width .4s ease;
+    }
+    .fravær-bar-fill.høj { background: var(--rød); }
+    .fravær-bar-fill.middel { background: var(--guld); }
+
+    input[type="checkbox"] {
+      width: 18px; height: 18px;
+      accent-color: var(--grøn);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🌿</div>
+    Bunyaan Akademi
+  </div>
+  <div class="dato" id="topDato"></div>
+</header>
+
+<nav>
+  <button class="aktiv" onclick="skiftSide('dashboard', this)">📊 Oversigt</button>
+  <button onclick="skiftSide('fravær', this)">✅ Fraværsregistrering</button>
+  <button onclick="skiftSide('skema', this)">📅 Moduloversigt</button>
+  <button onclick="skiftSide('elever', this)">👥 Elever</button>
+  <button onclick="skiftSide('rapport', this)">📈 Fraværsrapport</button>
+</nav>
+
+<main>
+
+  <!-- ── DASHBOARD ── -->
+  <div class="side aktiv" id="side-dashboard">
+    <h2>God dag, Administrator 🌿</h2>
+    <div class="stats-grid">
+      <div class="stat-kort">
+        <div class="tal" id="stat-elever">0</div>
+        <div class="label">Elever i alt</div>
+      </div>
+      <div class="stat-kort">
+        <div class="tal" id="stat-moduler">0</div>
+        <div class="label">Moduler registreret</div>
+      </div>
+      <div class="stat-kort">
+        <div class="tal" id="stat-fraværsdage">0</div>
+        <div class="label">Fraværsregistreringer</div>
+      </div>
+      <div class="stat-kort">
+        <div class="tal" id="stat-højtfravær">0</div>
+        <div class="label">Elever med >20% fravær</div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="kort">
+        <div class="sektion-header"><strong>Seneste fraværsregistreringer</strong></div>
+        <div id="dash-seneste-fravær"><p style="color:var(--tekst-lys);font-size:.9rem">Ingen registreringer endnu.</p></div>
+      </div>
+      <div class="kort">
+        <div class="sektion-header"><strong>Kommende moduler denne uge</strong></div>
+        <div id="dash-moduler"><p style="color:var(--tekst-lys);font-size:.9rem">Ingen moduler tilføjet endnu.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FRAVÆRSREGISTRERING ── -->
+  <div class="side" id="side-fravær">
+    <div class="sektion-header">
+      <h2>Fraværsregistrering</h2>
+    </div>
+    <div class="kort" style="margin-bottom:20px">
+      <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:14px;align-items:flex-end;flex-wrap:wrap">
+        <div class="form-gruppe" style="margin:0">
+          <label>Dato</label>
+          <input type="date" id="fravær-dato" />
+        </div>
+        <div class="form-gruppe" style="margin:0">
+          <label>Modul / Fag</label>
+          <select id="fravær-modul">
+            <option value="">– Vælg modul –</option>
+          </select>
+        </div>
+        <button class="btn btn-grøn" onclick="indlæsFraværsSession()">Indlæs →</button>
+      </div>
+    </div>
+
+    <div class="kort" id="fravær-panel" style="display:none">
+      <div class="sektion-header">
+        <strong id="fravær-titel">Registrer fravær</strong>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm" onclick="markerAlle(true)">Alle til stede</button>
+          <button class="btn btn-rød btn-sm" onclick="markerAlle(false)">Alle fraværende</button>
+        </div>
+      </div>
+      <p style="font-size:.83rem;color:var(--tekst-lys);margin-bottom:14px">Klik på en elev for at skifte status. Grøn = til stede, Rød = fraværende.</p>
+      <div class="elev-liste" id="fravær-elev-liste"></div>
+      <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-grøn" onclick="gemFravær()">💾 Gem registrering</button>
+        <span id="fravær-gem-status" style="align-self:center;font-size:.85rem;color:var(--grøn)"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODULOVERSIGT / SKEMA ── -->
+  <div class="side" id="side-skema">
+    <div class="sektion-header">
+      <h2>Moduloversigt</h2>
+      <button class="btn btn-grøn" onclick="åbnTilføjModul()">+ Tilføj modul</button>
+    </div>
+
+    <div class="kort" style="margin-bottom:20px">
+      <strong>Ugeskema</strong>
+      <div class="skema-grid" id="ugeskema"></div>
+    </div>
+
+    <div class="kort">
+      <div class="sektion-header">
+        <strong>Alle moduler</strong>
+        <span id="modul-antal" style="font-size:.85rem;color:var(--tekst-lys)"></span>
+      </div>
+      <div class="tabel-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fag / Modul</th>
+              <th>Dag</th>
+              <th>Tidspunkt</th>
+              <th>Lærer</th>
+              <th>År</th>
+              <th>Handlinger</th>
+            </tr>
+          </thead>
+          <tbody id="modul-tabel"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ELEVER ── -->
+  <div class="side" id="side-elever">
+    <div class="sektion-header">
+      <h2>Elevliste</h2>
+      <button class="btn btn-grøn" onclick="åbnTilføjElev()">+ Tilføj elev</button>
+    </div>
+    <div class="kort">
+      <div style="margin-bottom:14px">
+        <input type="text" placeholder="🔍 Søg efter navn eller nummer..." oninput="søgElever(this.value)"
+          style="padding:10px 14px;border:1px solid var(--kant);border-radius:8px;width:100%;font-size:.9rem;background:var(--grå)"/>
+      </div>
+      <div class="tabel-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Navn</th>
+              <th>Køn</th>
+              <th>Studieår</th>
+              <th>WhatsApp</th>
+              <th>Fravær %</th>
+              <th>Handlinger</th>
+            </tr>
+          </thead>
+          <tbody id="elev-tabel"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FRAVÆRSRAPPORT ── -->
+  <div class="side" id="side-rapport">
+    <h2>Fraværsrapport</h2>
+    <div class="dashboard-grid">
+      <div class="kort">
+        <strong>Fravær pr. elev</strong>
+        <div id="rapport-elever" style="margin-top:16px"></div>
+      </div>
+      <div class="kort">
+        <strong>Fravær pr. modul</strong>
+        <div id="rapport-moduler" style="margin-top:16px"></div>
+      </div>
+    </div>
+    <div class="kort" style="margin-top:20px">
+      <div class="sektion-header">
+        <strong>Detaljeret fraværslog</strong>
+        <button class="btn btn-outline btn-sm" onclick="eksporterCSV()">⬇ Eksporter CSV</button>
+      </div>
+      <div class="tabel-wrap">
+        <table>
+          <thead>
+            <tr><th>Dato</th><th>Modul</th><th>Elev</th><th>Status</th></tr>
+          </thead>
+          <tbody id="rapport-log"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<!-- ── MODAL: TILFØJ ELEV ── -->
+<div class="overlay" id="modal-elev">
+  <div class="modal">
+    <h3 id="elev-modal-titel">Tilføj elev</h3>
+    <div class="form-gruppe">
+      <label>Fulde navn</label>
+      <input type="text" id="elev-navn" placeholder="f.eks. Ahmed Al-Hassan" />
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="form-gruppe">
+        <label>Køn</label>
+        <select id="elev-køn">
+          <option value="Broder">Broder</option>
+          <option value="Søster">Søster</option>
+        </select>
+      </div>
+      <div class="form-gruppe">
+        <label>Studieår</label>
+        <select id="elev-år">
+          <option value="1">1. år</option>
+          <option value="2">2. år</option>
+          <option value="3">3. år</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-gruppe">
+      <label>WhatsApp-nummer</label>
+      <input type="tel" id="elev-tlf" placeholder="+45 12 34 56 78" />
+    </div>
+    <div class="form-gruppe">
+      <label>Notater (valgfrit)</label>
+      <textarea id="elev-noter" rows="2" placeholder="Evt. særlige hensyn..."></textarea>
+    </div>
+    <div class="modal-knapper">
+      <button class="btn btn-outline" onclick="lukModal('modal-elev')">Annuller</button>
+      <button class="btn btn-grøn" onclick="gemElev()">Gem elev</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: TILFØJ MODUL ── -->
+<div class="overlay" id="modal-modul">
+  <div class="modal">
+    <h3 id="modul-modal-titel">Tilføj modul</h3>
+    <div class="form-gruppe">
+      <label>Fag / modulnavn</label>
+      <input type="text" id="modul-fag" placeholder="f.eks. Tafsir, Fiqh, Arabisk..." />
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="form-gruppe">
+        <label>Dag</label>
+        <select id="modul-dag">
+          <option value="Mandag">Mandag</option>
+          <option value="Tirsdag">Tirsdag</option>
+          <option value="Onsdag">Onsdag</option>
+          <option value="Torsdag">Torsdag</option>
+          <option value="Fredag">Fredag</option>
+          <option value="Lørdag">Lørdag</option>
+          <option value="Søndag">Søndag</option>
+        </select>
+      </div>
+      <div class="form-gruppe">
+        <label>Studieår</label>
+        <select id="modul-år">
+          <option value="Alle">Alle år</option>
+          <option value="1">1. år</option>
+          <option value="2">2. år</option>
+          <option value="3">3. år</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="form-gruppe">
+        <label>Start</label>
+        <input type="time" id="modul-start" value="09:00"/>
+      </div>
+      <div class="form-gruppe">
+        <label>Slut</label>
+        <input type="time" id="modul-slut" value="11:00"/>
+      </div>
+    </div>
+    <div class="form-gruppe">
+      <label>Lærer / underviser</label>
+      <input type="text" id="modul-lærer" placeholder="f.eks. Br. Abdullah" />
+    </div>
+    <div class="form-gruppe">
+      <label>Lokale (valgfrit)</label>
+      <input type="text" id="modul-lokale" placeholder="f.eks. Sal A" />
+    </div>
+    <div class="modal-knapper">
+      <button class="btn btn-outline" onclick="lukModal('modal-modul')">Annuller</button>
+      <button class="btn btn-grøn" onclick="gemModul()">Gem modul</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+//  DATA LAYER – localStorage
+// ════════════════════════════════════════
+const LS = {
+  get: k => JSON.parse(localStorage.getItem('ba_' + k) || 'null'),
+  set: (k, v) => localStorage.setItem('ba_' + k, JSON.stringify(v)),
+};
+
+function hentElever() { return LS.get('elever') || []; }
+function hentModuler() { return LS.get('moduler') || []; }
+function hentFravær() { return LS.get('fravær') || []; }
+function gemEleverLS(e) { LS.set('elever', e); }
+function gemModulerLS(m) { LS.set('moduler', m); }
+function gemFraværLS(f) { LS.set('fravær', f); }
+
+// ════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════
+function skiftSide(id, knap) {
+  document.querySelectorAll('.side').forEach(s => s.classList.remove('aktiv'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('aktiv'));
+  document.getElementById('side-' + id).classList.add('aktiv');
+  knap.classList.add('aktiv');
+  if (id === 'dashboard') opdaterDashboard();
+  if (id === 'elever') gengivelElevTabel();
+  if (id === 'skema') gengivelSkema();
+  if (id === 'rapport') gengivelRapport();
+  if (id === 'fravær') opdaterFraværModulDropdown();
+}
+
+// ════════════════════════════════════════
+//  DATO
+// ════════════════════════════════════════
+const DAGE = ['Søndag','Mandag','Tirsdag','Onsdag','Torsdag','Fredag','Lørdag'];
+const MÅNEDER = ['januar','februar','marts','april','maj','juni','juli','august','september','oktober','november','december'];
+
+function formatDato(d) {
+  const dt = new Date(d);
+  return `${dt.getDate()}. ${MÅNEDER[dt.getMonth()]} ${dt.getFullYear()}`;
+}
+
+(function sætTopDato() {
+  const nu = new Date();
+  document.getElementById('topDato').textContent =
+    `${DAGE[nu.getDay()]}, ${nu.getDate()}. ${MÅNEDER[nu.getMonth()]} ${nu.getFullYear()}`;
+  document.getElementById('fravær-dato').value = nu.toISOString().split('T')[0];
+})();
+
+// ════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════
+function visTost(besked, fejl = false) {
+  const t = document.getElementById('toast');
+  t.textContent = besked;
+  t.style.background = fejl ? 'var(--rød)' : 'var(--grøn)';
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3000);
+}
+
+// ════════════════════════════════════════
+//  MODAL
+// ════════════════════════════════════════
+function åbnModal(id) { document.getElementById(id).classList.add('vis'); }
+function lukModal(id) { document.getElementById(id).classList.remove('vis'); }
+document.querySelectorAll('.overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) lukModal(o.id); });
+});
+
+// ════════════════════════════════════════
+//  ELEVER
+// ════════════════════════════════════════
+let redigereElev = null;
+
+function åbnTilføjElev() {
+  redigereElev = null;
+  document.getElementById('elev-modal-titel').textContent = 'Tilføj elev';
+  ['elev-navn','elev-tlf','elev-noter'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('elev-køn').value = 'Broder';
+  document.getElementById('elev-år').value = '1';
+  åbnModal('modal-elev');
+}
+
+function gemElev() {
+  const navn = document.getElementById('elev-navn').value.trim();
+  const tlf = document.getElementById('elev-tlf').value.trim();
+  if (!navn) { visTost('Navn er påkrævet', true); return; }
+
+  const elever = hentElever();
+  const obj = {
+    id: redigereElev || Date.now().toString(),
+    navn,
+    køn: document.getElementById('elev-køn').value,
+    år: document.getElementById('elev-år').value,
+    tlf,
+    noter: document.getElementById('elev-noter').value.trim(),
+  };
+
+  if (redigereElev) {
+    const i = elever.findIndex(e => e.id === redigereElev);
+    elever[i] = obj;
+    visTost('Elev opdateret ✓');
+  } else {
+    elever.push(obj);
+    visTost('Elev tilføjet ✓');
+  }
+  gemEleverLS(elever);
+  lukModal('modal-elev');
+  gengivelElevTabel();
+  opdaterDashboard();
+}
+
+function redigerElev(id) {
+  const e = hentElever().find(x => x.id === id);
+  if (!e) return;
+  redigereElev = id;
+  document.getElementById('elev-modal-titel').textContent = 'Rediger elev';
+  document.getElementById('elev-navn').value = e.navn;
+  document.getElementById('elev-køn').value = e.køn;
+  document.getElementById('elev-år').value = e.år;
+  document.getElementById('elev-tlf').value = e.tlf || '';
+  document.getElementById('elev-noter').value = e.noter || '';
+  åbnModal('modal-elev');
+}
+
+function sletElev(id) {
+  if (!confirm('Slet denne elev? Fraværsdata bevares.')) return;
+  gemEleverLS(hentElever().filter(e => e.id !== id));
+  gengivelElevTabel();
+  opdaterDashboard();
+  visTost('Elev slettet');
+}
+
+function elevFraværProcent(elevId) {
+  const fravær = hentFravær();
+  const moduler = hentModuler();
+  const total = fravær.reduce((n, f) => {
+    const modul = moduler.find(m => m.id === f.modulId);
+    if (!modul) return n;
+    const elever = hentElever().filter(e => e.år === modul.år || modul.år === 'Alle');
+    return elever.some(e => e.id === elevId) ? n + 1 : n;
+  }, 0);
+  const fraværCount = fravær.filter(f => {
+    const m = moduler.find(m => m.id === f.modulId);
+    if (!m) return false;
+    const tilknyttet = hentElever().filter(e => e.id === elevId).some(e => e.år === m.år || m.år === 'Alle');
+    return tilknyttet && f.fraværende.includes(elevId);
+  }).length;
+  return total === 0 ? 0 : Math.round((fraværCount / total) * 100);
+}
+
+function gengivelElevTabel(filter = '') {
+  const elever = hentElever().filter(e =>
+    !filter || e.navn.toLowerCase().includes(filter.toLowerCase()) || (e.tlf||'').includes(filter)
+  );
+  const tbody = document.getElementById('elev-tabel');
+  if (!elever.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="color:var(--tekst-lys);text-align:center;padding:24px">Ingen elever endnu. Tilføj den første! 👆</td></tr>';
+    return;
+  }
+  tbody.innerHTML = elever.map(e => {
+    const pct = elevFraværProcent(e.id);
+    const pctBadge = pct >= 20
+      ? `<span class="badge badge-rød">⚠ ${pct}%</span>`
+      : pct >= 10
+      ? `<span class="badge badge-guld">${pct}%</span>`
+      : `<span class="badge badge-grøn">${pct}%</span>`;
+    const wa = e.tlf
+      ? `<a class="wa-knap" href="https://wa.me/${e.tlf.replace(/[^0-9]/g,'')}" target="_blank">💬 WhatsApp</a>`
+      : '<span style="color:var(--tekst-lys);font-size:.8rem">Intet nr.</span>';
+    return `
+      <tr>
+        <td><strong>${e.navn}</strong>${e.noter ? `<br><span style="font-size:.75rem;color:var(--tekst-lys)">${e.noter}</span>` : ''}</td>
+        <td><span class="badge ${e.køn==='Broder'?'badge-grøn':'badge-guld'}">${e.køn}</span></td>
+        <td>${e.år}. år</td>
+        <td>${wa}</td>
+        <td>${pctBadge}</td>
+        <td style="white-space:nowrap">
+          <button class="btn btn-outline btn-sm" onclick="redigerElev('${e.id}')">✏️</button>
+          <button class="btn btn-rød btn-sm" onclick="sletElev('${e.id}')" style="margin-left:4px">🗑</button>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function søgElever(v) { gengivelElevTabel(v); }
+
+// ════════════════════════════════════════
+//  MODULER
+// ════════════════════════════════════════
+let redigereModul = null;
+
+function åbnTilføjModul() {
+  redigereModul = null;
+  document.getElementById('modul-modal-titel').textContent = 'Tilføj modul';
+  ['modul-fag','modul-lærer','modul-lokale'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('modul-start').value = '09:00';
+  document.getElementById('modul-slut').value = '11:00';
+  document.getElementById('modul-dag').value = 'Mandag';
+  document.getElementById('modul-år').value = 'Alle';
+  åbnModal('modal-modul');
+}
+
+function gemModul() {
+  const fag = document.getElementById('modul-fag').value.trim();
+  if (!fag) { visTost('Fagname er påkrævet', true); return; }
+
+  const moduler = hentModuler();
+  const obj = {
+    id: redigereModul || Date.now().toString(),
+    fag,
+    dag: document.getElementById('modul-dag').value,
+    år: document.getElementById('modul-år').value,
+    start: document.getElementById('modul-start').value,
+    slut: document.getElementById('modul-slut').value,
+    lærer: document.getElementById('modul-lærer').value.trim(),
+    lokale: document.getElementById('modul-lokale').value.trim(),
+  };
+
+  if (redigereModul) {
+    const i = moduler.findIndex(m => m.id === redigereModul);
+    moduler[i] = obj;
+    visTost('Modul opdateret ✓');
+  } else {
+    moduler.push(obj);
+    visTost('Modul tilføjet ✓');
+  }
+  gemModulerLS(moduler);
+  lukModal('modal-modul');
+  gengivelSkema();
+  opdaterFraværModulDropdown();
+  opdaterDashboard();
+}
+
+function redigerModul(id) {
+  const m = hentModuler().find(x => x.id === id);
+  if (!m) return;
+  redigereModul = id;
+  document.getElementById('modul-modal-titel').textContent = 'Rediger modul';
+  document.getElementById('modul-fag').value = m.fag;
+  document.getElementById('modul-dag').value = m.dag;
+  document.getElementById('modul-år').value = m.år;
+  document.getElementById('modul-start').value = m.start;
+  document.getElementById('modul-slut').value = m.slut;
+  document.getElementById('modul-lærer').value = m.lærer || '';
+  document.getElementById('modul-lokale').value = m.lokale || '';
+  åbnModal('modal-modul');
+}
+
+function sletModul(id) {
+  if (!confirm('Slet dette modul?')) return;
+  gemModulerLS(hentModuler().filter(m => m.id !== id));
+  gengivelSkema();
+  opdaterFraværModulDropdown();
+  opdaterDashboard();
+  visTost('Modul slettet');
+}
+
+function gengivelSkema() {
+  const moduler = hentModuler();
+  document.getElementById('modul-antal').textContent = `${moduler.length} modul(er) i alt`;
+
+  // Ugeskema (kun hverdage + lørdag)
+  const ugedage = ['Mandag','Tirsdag','Onsdag','Torsdag','Fredag','Lørdag','Søndag'];
+  const aktiveDage = [...new Set(moduler.map(m => m.dag))].sort((a,b) => ugedage.indexOf(a) - ugedage.indexOf(b));
+
+  const skema = document.getElementById('ugeskema');
+  if (!moduler.length) {
+    skema.innerHTML = '<p style="color:var(--tekst-lys);font-size:.9rem;padding:12px">Ingen moduler endnu.</p>';
+  } else {
+    const cols = aktiveDage.length || 1;
+    skema.style.gridTemplateColumns = `80px repeat(${cols}, 1fr)`;
+    let html = '<div class="skema-celle skema-header" style="min-height:40px">Tid</div>';
+    aktiveDage.forEach(d => html += `<div class="skema-celle skema-header">${d}</div>`);
+
+    // Saml unikke tider
+    const tider = [...new Set(moduler.map(m => m.start))].sort();
+    tider.forEach(tid => {
+      html += `<div class="skema-celle skema-tid">${tid}</div>`;
+      aktiveDage.forEach(dag => {
+        const m = moduler.find(x => x.dag === dag && x.start === tid);
+        if (m) {
+          html += `<div class="skema-celle skema-modul har-modul" onclick="redigerModul('${m.id}')">
+            <div class="fag">${m.fag}</div>
+            <div class="lærer">${m.lærer || ''} ${m.lokale ? '· '+m.lokale : ''}</div>
+            <div class="lærer">${m.år === 'Alle' ? 'Alle år' : m.år+'. år'}</div>
+          </div>`;
+        } else {
+          html += `<div class="skema-celle skema-tom"></div>`;
+        }
+      });
+    });
+    skema.innerHTML = html;
+  }
+
+  // Tabel
+  const tbody = document.getElementById('modul-tabel');
+  if (!moduler.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="color:var(--tekst-lys);text-align:center;padding:24px">Ingen moduler endnu.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = moduler.map(m => `
+    <tr>
+      <td><strong>${m.fag}</strong></td>
+      <td>${m.dag}</td>
+      <td>${m.start}–${m.slut}</td>
+      <td>${m.lærer || '–'}</td>
+      <td><span class="badge badge-grøn">${m.år === 'Alle' ? 'Alle år' : m.år+'. år'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-outline btn-sm" onclick="redigerModul('${m.id}')">✏️</button>
+        <button class="btn btn-rød btn-sm" onclick="sletModul('${m.id}')" style="margin-left:4px">🗑</button>
+      </td>
+    </tr>`).join('');
+}
+
+// ════════════════════════════════════════
+//  FRAVÆRSREGISTRERING
+// ════════════════════════════════════════
+let aktivSession = null; // { dato, modulId, statuser: { elevId: bool } }
+
+function opdaterFraværModulDropdown() {
+  const sel = document.getElementById('fravær-modul');
+  const moduler = hentModuler();
+  sel.innerHTML = '<option value="">– Vælg modul –</option>' +
+    moduler.map(m => `<option value="${m.id}">${m.fag} (${m.dag} ${m.start})</option>`).join('');
+}
+
+function indlæsFraværsSession() {
+  const dato = document.getElementById('fravær-dato').value;
+  const modulId = document.getElementById('fravær-modul').value;
+  if (!dato || !modulId) { visTost('Vælg dato og modul', true); return; }
+
+  const modul = hentModuler().find(m => m.id === modulId);
+  const alleElever = hentElever();
+  const elever = alleElever.filter(e => modul.år === 'Alle' || e.år === modul.år);
+
+  // Tjek om der allerede er gemt
+  const gemt = hentFravær().find(f => f.dato === dato && f.modulId === modulId);
+  const statuser = {};
+  elever.forEach(e => {
+    statuser[e.id] = gemt ? !gemt.fraværende.includes(e.id) : true;
+  });
+
+  aktivSession = { dato, modulId, statuser };
+
+  document.getElementById('fravær-titel').textContent =
+    `${modul.fag} — ${formatDato(dato)} ${gemt ? '(tidligere registrering)' : ''}`;
+
+  const liste = document.getElementById('fravær-elev-liste');
+  if (!elever.length) {
+    liste.innerHTML = '<p style="color:var(--tekst-lys)">Ingen elever tilknyttet dette modul/år.</p>';
+  } else {
+    liste.innerHTML = elever.map(e => {
+      const tilStede = statuser[e.id];
+      return `
+        <div class="elev-kort ${tilStede ? 'til-stede' : 'fraværende'}" id="kort-${e.id}" onclick="skiftStatus('${e.id}')">
+          <div class="elev-avatar">${e.navn.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()}</div>
+          <div>
+            <div class="elev-navn">${e.navn}</div>
+            <div class="elev-status" id="status-${e.id}">${tilStede ? '✅ Til stede' : '❌ Fraværende'}</div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  document.getElementById('fravær-panel').style.display = 'block';
+  document.getElementById('fravær-gem-status').textContent = gemt ? '(Gemt tidligere – opdater ved at gemme igen)' : '';
+}
+
+function skiftStatus(elevId) {
+  if (!aktivSession) return;
+  aktivSession.statuser[elevId] = !aktivSession.statuser[elevId];
+  const tilStede = aktivSession.statuser[elevId];
+  const kort = document.getElementById('kort-' + elevId);
+  kort.className = 'elev-kort ' + (tilStede ? 'til-stede' : 'fraværende');
+  document.getElementById('status-' + elevId).textContent = tilStede ? '✅ Til stede' : '❌ Fraværende';
+}
+
+function markerAlle(tilStede) {
+  if (!aktivSession) return;
+  Object.keys(aktivSession.statuser).forEach(id => {
+    aktivSession.statuser[id] = tilStede;
+    const kort = document.getElementById('kort-' + id);
+    if (kort) {
+      kort.className = 'elev-kort ' + (tilStede ? 'til-stede' : 'fraværende');
+      document.getElementById('status-' + id).textContent = tilStede ? '✅ Til stede' : '❌ Fraværende';
+    }
+  });
+}
+
+function gemFravær() {
+  if (!aktivSession) return;
+  const fraværende = Object.entries(aktivSession.statuser)
+    .filter(([, tilStede]) => !tilStede)
+    .map(([id]) => id);
+
+  const alle = hentFravær();
+  const i = alle.findIndex(f => f.dato === aktivSession.dato && f.modulId === aktivSession.modulId);
+  const obj = {
+    dato: aktivSession.dato,
+    modulId: aktivSession.modulId,
+    fraværende,
+    tidspunkt: new Date().toISOString(),
+  };
+  if (i >= 0) alle[i] = obj; else alle.push(obj);
+  gemFraværLS(alle);
+
+  document.getElementById('fravær-gem-status').textContent = `✓ Gemt kl. ${new Date().toLocaleTimeString('da-DK',{hour:'2-digit',minute:'2-digit'})}`;
+  visTost(`Fravær gemt — ${fraværende.length} fraværende`);
+  opdaterDashboard();
+}
+
+// ════════════════════════════════════════
+//  RAPPORT
+// ════════════════════════════════════════
+function gengivelRapport() {
+  const elever = hentElever();
+  const moduler = hentModuler();
+  const fravær = hentFravær();
+
+  // Pr. elev
+  const elDiv = document.getElementById('rapport-elever');
+  if (!elever.length) {
+    elDiv.innerHTML = '<p style="color:var(--tekst-lys);font-size:.9rem">Ingen elever.</p>';
+  } else {
+    elDiv.innerHTML = elever.sort((a,b) => elevFraværProcent(b.id) - elevFraværProcent(a.id)).map(e => {
+      const pct = elevFraværProcent(e.id);
+      const cls = pct >= 20 ? 'høj' : pct >= 10 ? 'middel' : '';
+      return `<div class="fravær-bar-wrap">
+        <div class="fravær-bar-label">
+          <span>${e.navn}</span>
+          <span style="font-weight:700;color:${pct>=20?'var(--rød)':pct>=10?'var(--guld)':'var(--grøn)'}">${pct}%</span>
+        </div>
+        <div class="fravær-bar-bg">
+          <div class="fravær-bar-fill ${cls}" style="width:${Math.min(pct,100)}%"></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Pr. modul
+  const mDiv = document.getElementById('rapport-moduler');
+  if (!moduler.length) {
+    mDiv.innerHTML = '<p style="color:var(--tekst-lys);font-size:.9rem">Ingen moduler.</p>';
+  } else {
+    mDiv.innerHTML = moduler.map(m => {
+      const sessioner = fravær.filter(f => f.modulId === m.id);
+      const tilknyttede = elever.filter(e => m.år === 'Alle' || e.år === m.år);
+      const total = sessioner.length * tilknyttede.length;
+      const fraværCount = sessioner.reduce((n, f) => n + f.fraværende.filter(id => tilknyttede.some(e=>e.id===id)).length, 0);
+      const pct = total === 0 ? 0 : Math.round((fraværCount/total)*100);
+      const cls = pct >= 20 ? 'høj' : pct >= 10 ? 'middel' : '';
+      return `<div class="fravær-bar-wrap">
+        <div class="fravær-bar-label">
+          <span>${m.fag} (${m.dag})</span>
+          <span style="font-weight:700;color:${pct>=20?'var(--rød)':pct>=10?'var(--guld)':'var(--grøn)'}">${pct}%</span>
+        </div>
+        <div class="fravær-bar-bg">
+          <div class="fravær-bar-fill ${cls}" style="width:${Math.min(pct,100)}%"></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Log
+  const tbody = document.getElementById('rapport-log');
+  const logRækker = [];
+  fravær.forEach(f => {
+    const m = moduler.find(x => x.id === f.modulId);
+    if (!m) return;
+    const tilknyttede = elever.filter(e => m.år === 'Alle' || e.år === m.år);
+    tilknyttede.forEach(e => {
+      const fraværende = f.fraværende.includes(e.id);
+      logRækker.push({ dato: f.dato, fag: m.fag, elev: e.navn, fraværende });
+    });
+  });
+  logRækker.sort((a,b) => b.dato.localeCompare(a.dato));
+  if (!logRækker.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--tekst-lys);text-align:center;padding:24px">Ingen registreringer.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = logRækker.map(r =>
+    `<tr>
+      <td>${formatDato(r.dato)}</td>
+      <td>${r.fag}</td>
+      <td>${r.elev}</td>
+      <td>${r.fraværende
+        ? '<span class="badge badge-rød">Fraværende</span>'
+        : '<span class="badge badge-grøn">Til stede</span>'}</td>
+    </tr>`).join('');
+}
+
+// ════════════════════════════════════════
+//  CSV EKSPORT
+// ════════════════════════════════════════
+function eksporterCSV() {
+  const elever = hentElever();
+  const moduler = hentModuler();
+  const fravær = hentFravær();
+  const rækker = [['Dato','Modul','Fag','Elev','Status']];
+  fravær.forEach(f => {
+    const m = moduler.find(x => x.id === f.modulId);
+    if (!m) return;
+    const tilknyttede = elever.filter(e => m.år === 'Alle' || e.år === m.år);
+    tilknyttede.forEach(e => {
+      rækker.push([f.dato, `${m.dag} ${m.start}`, m.fag, e.navn, f.fraværende.includes(e.id) ? 'Fraværende' : 'Til stede']);
+    });
+  });
+  const csv = rækker.map(r => r.join(';')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,﻿' + encodeURIComponent(csv);
+  a.download = `bunyaan_fravær_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  visTost('CSV downloadet ✓');
+}
+
+// ════════════════════════════════════════
+//  DASHBOARD
+// ════════════════════════════════════════
+function opdaterDashboard() {
+  const elever = hentElever();
+  const moduler = hentModuler();
+  const fravær = hentFravær();
+
+  document.getElementById('stat-elever').textContent = elever.length;
+  document.getElementById('stat-moduler').textContent = moduler.length;
+  document.getElementById('stat-fraværsdage').textContent = fravær.length;
+  document.getElementById('stat-højtfravær').textContent =
+    elever.filter(e => elevFraværProcent(e.id) >= 20).length;
+
+  // Seneste fravær
+  const sDiv = document.getElementById('dash-seneste-fravær');
+  const seneste = [...fravær].sort((a,b) => b.dato.localeCompare(a.dato)).slice(0,5);
+  if (!seneste.length) {
+    sDiv.innerHTML = '<p style="color:var(--tekst-lys);font-size:.9rem">Ingen registreringer endnu.</p>';
+  } else {
+    sDiv.innerHTML = seneste.map(f => {
+      const m = moduler.find(x => x.id === f.modulId);
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--kant)">
+        <div>
+          <div style="font-weight:600;font-size:.88rem">${m ? m.fag : 'Ukendt'}</div>
+          <div style="font-size:.78rem;color:var(--tekst-lys)">${formatDato(f.dato)}</div>
+        </div>
+        <span class="badge ${f.fraværende.length>0?'badge-rød':'badge-grøn'}">${f.fraværende.length} fraværende</span>
+      </div>`;
+    }).join('');
+  }
+
+  // Kommende moduler (denne uges dage)
+  const mDiv = document.getElementById('dash-moduler');
+  const nu = new Date();
+  const dagNavn = DAGE[nu.getDay()];
+  const dennUge = moduler.filter(m => m.dag === dagNavn || true).slice(0,5);
+  if (!dennUge.length) {
+    mDiv.innerHTML = '<p style="color:var(--tekst-lys);font-size:.9rem">Ingen moduler tilføjet endnu.</p>';
+  } else {
+    mDiv.innerHTML = dennUge.map(m =>
+      `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--kant)">
+        <div>
+          <div style="font-weight:600;font-size:.88rem">${m.fag}</div>
+          <div style="font-size:.78rem;color:var(--tekst-lys)">${m.dag} ${m.start}–${m.slut} · ${m.lærer||'–'}</div>
+        </div>
+        <span class="badge badge-grøn">${m.år==='Alle'?'Alle år':m.år+'. år'}</span>
+      </div>`).join('');
+  }
+}
+
+// ════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════
+opdaterFraværModulDropdown();
+opdaterDashboard();
+</script>
+</body>
+</html>
